@@ -8,6 +8,8 @@ import com.example.cleanarchitecture.databinding.FragmentProductListBinding
 import com.example.cleanarchitecture.extensions.toast
 import com.example.cleanarchitecture.presentation.BaseFragment
 import com.example.cleanarchitecture.presentation.adapter.ProductListAdapter
+import com.example.cleanarchitecture.presentation.detail.ProductDetailActivity
+import com.example.cleanarchitecture.presentation.main.MainActivity
 import org.koin.android.ext.android.inject
 
 internal class ProductListFragment: BaseFragment<ProductListViewModel, FragmentProductListBinding>() {
@@ -24,7 +26,9 @@ internal class ProductListFragment: BaseFragment<ProductListViewModel, FragmentP
 
     private val startProductDetailForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result : ActivityResult ->
-            // TODO 성공적으로 처리 완료 이후 동작
+            if (result.resultCode == ProductDetailActivity.PRODUCT_ORDERED_RESULT_CODE){
+                (requireActivity() as MainActivity).viewModel.refreshOrderList()
+            }
     }
 
     override fun observeData() = viewModel.productListStateLiveData.observe(this) {
@@ -67,10 +71,9 @@ internal class ProductListFragment: BaseFragment<ProductListViewModel, FragmentP
             emptyResultTextView.isGone = true
             recyclerView.isGone = false
             adapter.setProductList(state.productList){
-//                startProductDetailForResult.launch(
-//                    ProductDetailActivity.newIntent(requireContext(), it.id)
-//                )
-                requireContext().toast("Product Entity : $it")
+                startProductDetailForResult.launch(
+                    ProductDetailActivity.newIntent(requireContext(), it.id)
+                )
             }
         }
     }

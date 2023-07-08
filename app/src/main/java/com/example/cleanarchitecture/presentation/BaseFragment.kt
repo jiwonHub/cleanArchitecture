@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import kotlinx.coroutines.Job
 
-internal abstract class BaseFragment<VM : BaseViewModel, VB: ViewBinding>: Fragment() {
+internal abstract class BaseFragment<VM : BaseViewModel, VB : ViewBinding> : Fragment() {
 
     abstract val viewModel: VM
 
@@ -37,7 +37,7 @@ internal abstract class BaseFragment<VM : BaseViewModel, VB: ViewBinding>: Fragm
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if(fetchJob.isActive){
+        if (fetchJob.isActive) {
             fetchJob.cancel()
         }
     }
